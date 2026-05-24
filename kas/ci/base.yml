@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+#
+# Composable brick: declares the meta-foundries + meta-updater layer
+# pair. Designed to be header.includes'd by ci-jobs/*.yml or by a
+# downstream meta-foundries-overlay/kas/factory.yml. The parent kas
+# file provides the actual URLs / branches for these repos.
+
+header:
+  version: 14
+
+repos:
+  meta-foundries:
+  meta-updater:

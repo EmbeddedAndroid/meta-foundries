@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+#
+# Composable brick: meta-foundries + meta-updater on top of the
+# Qualcomm RB3 Gen 2 machine + qcom-distro-sota distro composition
+# provided by meta-qcom's ci/*.yml chain.
+#
+# Use from ci-jobs/rb3gen2.yml (smoke build) or from
+# meta-foundries-overlay/kas/factory.yml (full factory image).
+
+header:
+  version: 14
+  includes:
+    - repo: meta-qcom
+      file: ci/rb3gen2-core-kit.yml
+    - repo: meta-qcom
+      file: ci/qcom-distro-sota.yml
+    - kas/ci/base.yml
+
+repos:
+  meta-qcom:
+  meta-qcom-distro:
+  meta-qcom-3rdparty:
+
+local_conf_header:
+  # meta-qcom's ci/base.yml adds git.codelinaro.org as a MIRRORS
+  # rewrite for all github URLs, but that mirror requires auth we
+  # do not have. Override empty so MIRRORS stays at oe-core defaults.
+  clo-mirrors: ""
