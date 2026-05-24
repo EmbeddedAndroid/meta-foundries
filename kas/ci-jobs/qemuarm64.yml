@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+#
+# CI entrypoint: smoke-builds core-image-foundries-minimal on
+# qemuarm64 against pure oe-core + meta-foundries. Proves the
+# product layer works without any vendor BSP.
+
+header:
+  version: 14
+  includes:
+    - kas/ci/target-qemuarm64.yml
+
+repos:
+  meta-foundries:
+    path: .
+
+  meta-updater:
+    url: https://github.com/EmbeddedAndroid/meta-updater
+    branch: fio-v1
+
+target:
+  - core-image-foundries-minimal

@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+#
+# CI entrypoint: smoke-builds core-image-foundries-minimal on RB3 Gen 2
+# against the meta-foundries / meta-qcom layer stack. Does NOT include
+# meta-foundries-overlay; this proves the product layer is sound in
+# isolation against the BSP. The full factory image build is driven
+# from meta-foundries-overlay/kas/factory.yml.
+
+header:
+  version: 14
+  includes:
+    - kas/ci/target-rb3gen2.yml
+
+repos:
+  meta-foundries:
+    path: .
+
+  meta-updater:
+    url: https://github.com/EmbeddedAndroid/meta-updater
+    branch: fio-v1
+
+  meta-qcom:
+    url: https://github.com/EmbeddedAndroid/meta-qcom
+    branch: fio-v1
+
+  meta-qcom-distro:
+    url: https://github.com/EmbeddedAndroid/meta-qcom-distro
+    branch: fio-v1
+
+  meta-qcom-3rdparty:
+    url: https://github.com/EmbeddedAndroid/meta-qcom-3rdparty
+    branch: fio-v1
+
+target:
+  - core-image-foundries-minimal
