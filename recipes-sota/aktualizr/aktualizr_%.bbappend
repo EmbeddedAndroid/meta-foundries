@@ -1,10 +1,10 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-BRANCH:qcom-distro = "v97"
-SRCREV:qcom-distro = "2362e88f8b105b32cf871505082bdf3ed242009c"
+BRANCH = "v97"
+SRCREV = "2362e88f8b105b32cf871505082bdf3ed242009c"
 
-SRC_URI:remove:qcom-distro = "gitsm://github.com/uptane/aktualizr;branch=${BRANCH};name=aktualizr;protocol=https"
-SRC_URI:append:qcom-distro = " \
+SRC_URI:remove = "gitsm://github.com/uptane/aktualizr;branch=${BRANCH};name=aktualizr;protocol=https"
+SRC_URI:append = " \
     gitsm://github.com/foundriesio/aktualizr-lite;protocol=https;branch=${BRANCH};name=aktualizr \
     file://aktualizr-lite.service.in \
     file://tmpfiles.conf \
@@ -26,34 +26,34 @@ COMPOSE_HTTP_TIMEOUT ?= "60"
 DOCKER_CRED_HELPER_CFG ?= "${libdir}/docker/config.json"
 
 # Workaround as aktualizr is a submodule of aktualizr-lite
-do_configure:prepend:qcom-distro() {
+do_configure:prepend() {
     cd ${S}
     git log -1 --format=%h | tr -d '\n' > VERSION
     cp VERSION aktualizr/VERSION
     cd ${B}
 }
 
-do_compile:append:qcom-distro() {
+do_compile:append() {
     sed -e 's|@@COMPOSE_HTTP_TIMEOUT@@|${COMPOSE_HTTP_TIMEOUT}|g' \
         -e 's|@@DOCKER_CRED_HELPER_CFG@@|${DOCKER_CRED_HELPER_CFG}|g' \
         ${UNPACKDIR}/aktualizr-lite.service.in > ${UNPACKDIR}/aktualizr-lite.service
 }
 
-do_install:prepend:qcom-distro() {
+do_install:prepend() {
     # asn1c tool places the full absolute path for the asn1 file at the header comment of the generated source files
     # pdu_collection.c also lists, as comments, the reference asn1 files paths
     # Making the paths in the comments relative to ${S} avoids Yocto TMPDIR reference warnings
     sed -i "s|${S}/||g" ${B}/aktualizr/src/libaktualizr-posix/asn1/generated/asn1/*.[ch]
 }
 
-do_install:prepend:qcom-distro() {
+do_install:prepend() {
     # link the path to config so aktualizr's do_install:append will find config files
     [ -e ${S}/config ] || ln -s ${S}/aktualizr/config ${S}/config
     # link so native build will find sota_tools
     [ -e ${B}/src ] || ln -s ${B}/aktualizr/src ${B}/src
 }
 
-do_install:append:qcom-distro() {
+do_install:append() {
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${UNPACKDIR}/aktualizr-lite.service ${D}${systemd_system_unitdir}/
     install -d ${D}${nonarch_libdir}/tmpfiles.d
