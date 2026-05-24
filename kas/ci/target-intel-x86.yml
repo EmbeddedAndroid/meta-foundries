@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
 #
-# Composable brick: meta-foundries on qemuarm64. Stock oe-core /
-# poky distro, no vendor BSP. Pure portability smoke test: proves
-# the layer parses and product packages assemble against vanilla
-# upstream.
+# Composable brick: meta-foundries on generic Intel x86_64. Stock
+# oe-core / poky distro + meta-intel BSP. Proves the product layer
+# works against a non-qcom BSP and provides the foundation for Intel
+# factory builds.
 
 header:
   version: 14
@@ -43,7 +43,10 @@ repos:
   meta-virtualization:
     url: https://git.yoctoproject.org/meta-virtualization
 
-machine: qemuarm64
+  meta-intel:
+    url: https://github.com/openembedded/meta-intel
+
+machine: intel-corei7-64
 
 local_conf_header:
   base: |

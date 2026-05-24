@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+#
+# CI entrypoint: smoke-builds core-image-foundries-minimal on generic
+# Intel x86_64 (intel-corei7-64) against stock poky + meta-intel +
+# meta-foundries.
+
+header:
+  version: 14
+  includes:
+    - kas/ci/target-intel-x86.yml
+
+repos:
+  meta-foundries:
+    path: .
+
+  meta-updater:
+    url: https://github.com/EmbeddedAndroid/meta-updater
+    branch: fio-v1
+
+target:
+  - core-image-foundries-minimal
