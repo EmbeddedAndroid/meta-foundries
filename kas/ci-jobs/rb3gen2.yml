@@ -13,7 +13,6 @@ header:
 
 repos:
   meta-foundries:
-    path: .
 
   meta-updater:
     url: https://github.com/EmbeddedAndroid/meta-updater
