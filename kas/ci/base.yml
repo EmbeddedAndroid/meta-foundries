@@ -11,3 +11,11 @@ header:
 repos:
   meta-foundries:
   meta-updater:
+
+local_conf_header:
+  # 32 GB hosts (CIL / partner-AWS Foundries CI workers) OOM with the
+  # bitbake defaults (BB_NUMBER_THREADS=nproc, PARALLEL_MAKE=-j nproc).
+  # Cap to half the core count to keep peak memory under the envelope.
+  bb-parallel: |
+    BB_NUMBER_THREADS = "16"
+    PARALLEL_MAKE = "-j 16"
