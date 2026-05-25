@@ -56,13 +56,14 @@ local_conf_header:
     INHERIT += "sota"
     SOTA_CLIENT = "aktualizr-lite"
   network: |
-    # fioconfig RDEPENDS on networkmanager-nmcli; poky's default
-    # provider for the network-configuration virtual is connman.
-    # PREFERRED_RPROVIDER alone doesn't take when sota.bbclass
-    # injects network-configuration into IMAGE_INSTALL; the install
-    # set still pulls connman binaries which conflict with the
-    # transitively-required networkmanager-daemon. Excluding connman
-    # from the package pool forces opkg to use NetworkManager.
+    # fioconfig RDEPENDS on networkmanager-nmcli; meta-updater's
+    # sota_<machine>.bbclass force-appends "network-configuration"
+    # to IMAGE_INSTALL with the :sota override AND pins
+    # PREFERRED_RPROVIDER_network-configuration = "connman".
+    # Override both so opkg installs NetworkManager and never sees
+    # connman in the install set.
     DISTRO_FEATURES:append = " networkmanager"
     PREFERRED_RPROVIDER_network-configuration = "networkmanager"
+    IMAGE_INSTALL:remove:sota = " network-configuration"
+    IMAGE_INSTALL:append = " networkmanager"
     PACKAGE_EXCLUDE += "connman connman-client connman-tools connman-tests"
