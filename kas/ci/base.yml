@@ -15,7 +15,9 @@ repos:
 local_conf_header:
   # 32 GB hosts (CIL / partner-AWS Foundries CI workers) OOM with the
   # bitbake defaults (BB_NUMBER_THREADS=nproc, PARALLEL_MAKE=-j nproc).
-  # Cap to half the core count to keep peak memory under the envelope.
+  # -j 16 also OOMs when llvm + clang + spirv-llvm-translator all hit
+  # do_compile concurrently (each cc1plus ~1.5 GB, 32 cc1plus = 48 GB).
+  # -j 8 caps worst-case two-recipe concurrent compile at ~24 GB.
   bb-parallel: |
-    BB_NUMBER_THREADS = "16"
-    PARALLEL_MAKE = "-j 16"
+    BB_NUMBER_THREADS = "8"
+    PARALLEL_MAKE = "-j 8"
