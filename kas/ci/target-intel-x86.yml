@@ -57,3 +57,4 @@ local_conf_header:
   sota: |
     DISTRO_FEATURES:append = " sota"
     INHERIT += "sota"
+    SOTA_CLIENT = "aktualizr-lite"
