@@ -44,7 +44,7 @@ repos:
     url: https://git.yoctoproject.org/meta-virtualization
 
   meta-intel:
-    url: https://github.com/openembedded/meta-intel
+    url: https://git.yoctoproject.org/meta-intel
 
 machine: intel-corei7-64
 
