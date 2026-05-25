@@ -58,3 +58,10 @@ local_conf_header:
     DISTRO_FEATURES:append = " sota"
     INHERIT += "sota"
     SOTA_CLIENT = "aktualizr-lite"
+  network: |
+    # fioconfig RDEPENDS on networkmanager-nmcli; poky's default
+    # provider for the network-configuration virtual is connman,
+    # which conflicts at opkg-install time. Pick NetworkManager.
+    DISTRO_FEATURES:append = " networkmanager"
+    PREFERRED_RPROVIDER_network-configuration = "networkmanager"
+    PREFERRED_RPROVIDER_virtual/network-configuration = "networkmanager"
