@@ -70,3 +70,10 @@ local_conf_header:
     IMAGE_INSTALL:remove:sota = " network-configuration"
     IMAGE_INSTALL:append = " networkmanager"
     PACKAGE_EXCLUDE += "connman connman-client connman-tools connman-tests"
+  bbmask: |
+    # meta-foundries-overlay ships lmp-factory-image.bb (qcom) and
+    # lmp-factory-image-intel.bb. The qcom one require's
+    # qcom-multimedia-image.bb which only exists in meta-qcom-distro,
+    # so it ParseError's on Intel builds where qcom-distro is absent.
+    # Mask it so bitbake skips parsing it for x86_64 / Intel targets.
+    BBMASK += "meta-foundries-overlay/recipes-samples/images/lmp-factory-image\.bb$"
