@@ -19,4 +19,5 @@ RDEPENDS:${PN} = " \
     lmp-device-auto-register \
     lmp-device-register \
     ostree-pending-reboot \
+    wireguard-tools \
 "
