@@ -76,4 +76,8 @@ local_conf_header:
     # qcom-multimedia-image.bb which only exists in meta-qcom-distro,
     # so it ParseError's on Intel builds where qcom-distro is absent.
     # Mask it so bitbake skips parsing it for x86_64 / Intel targets.
-    BBMASK += "meta-foundries-overlay/recipes-samples/images/lmp-factory-image\.bb$"
+    # kas-container mounts the overlay layer at /build/../repo/ — the
+    # repo-name segment isn't in the path bitbake sees, so anchor on
+    # the recipe path within the layer. re.search semantics, "$"
+    # prevents matching the lmp-factory-image-intel.bb sibling.
+    BBMASK += "recipes-samples/images/lmp-factory-image\.bb$"
