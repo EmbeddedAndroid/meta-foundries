@@ -10,8 +10,12 @@ PACKAGES = "${PN}"
 
 RDEPENDS:${PN} = " \
     aktualizr-lite \
+    compose-apps-early-start \
     composectl \
+    docker-cli-config \
+    docker-compose \
     docker-credential-helper-fio \
+    docker-moby \
     fio-diag \
     fio-docker-fsck \
     fioconfig \
