@@ -5,10 +5,17 @@
 
 CORE_IMAGE_BASE_INSTALL += "packagegroup-foundries"
 
-# Dev convenience: empty-password root login over ssh and console.
-# meta-qcom's ci/base.yml already sets the same on qcom BSPs, so this
-# is a no-op there; it's the non-qcom factory builds (intel, uno-q
-# variants targeting other BSPs, future qemuarm64 factory) that need
-# it explicitly. Production builds for shipping hardware must override
-# in meta-foundries-overlay or device-config to set a real password.
-EXTRA_IMAGE_FEATURES += "allow-empty-password empty-root-password allow-root-login"
+# Dev login: fio:fio with sudo + docker, root locked. Mirrors the
+# stock meta-lmp behaviour. Production images that ship to customer
+# hardware must override (BBMASK this include, or override
+# EXTRA_USERS_PARAMS) to use customer-managed credentials and/or a
+# pubkey-only sshd.
+IMAGE_INSTALL:append = " sudo"
+
+inherit extrausers
+
+EXTRA_USERS_PARAMS = " \
+    useradd -m -s /bin/bash -p \$(openssl passwd -6 fio) fio; \
+    usermod -aG sudo,docker,video,audio,plugdev,dialout fio; \
+    passwd -l root; \
+"
