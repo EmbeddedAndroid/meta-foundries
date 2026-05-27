@@ -17,5 +17,5 @@ inherit extrausers
 EXTRA_USERS_PARAMS = " \
     useradd -m -s /bin/bash -p \$(openssl passwd -6 fio) fio; \
     usermod -aG sudo,docker,video,audio,plugdev,dialout fio; \
-    passwd -l root; \
+    usermod -L root; \
 "
