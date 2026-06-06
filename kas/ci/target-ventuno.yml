@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+#
+# Composable brick: meta-foundries + meta-updater on top of the
+# Arduino VENTUNO Q machine + qcom-distro-sota distro composition.
+#
+# VENTUNO Q (monza / QCS8275) BSP lives in meta-qcom-3rdparty; the chain
+# is:
+#   meta-qcom-3rdparty/ci/ventuno-q.yml  ->  meta-qcom-3rdparty/ci/base.yml
+#                                       ->  meta-qcom/ci/base.yml
+# qcom-distro-sota.yml then layers the SOTA-enabled distro on top.
+#
+# Use from meta-foundries-overlay/kas/factory-ventuno.yml (factory image).
+
+header:
+  version: 14
+  includes:
+    - repo: meta-qcom-3rdparty
+      file: ci/ventuno-q.yml
+    - repo: meta-qcom
+      file: ci/qcom-distro-sota.yml
+    - kas/ci/base.yml
+
+repos:
+  meta-qcom:
+  meta-qcom-distro:
+  meta-qcom-3rdparty:
+
+local_conf_header:
+  # meta-qcom's ci/base.yml adds git.codelinaro.org as a MIRRORS
+  # rewrite for all github URLs, but that mirror requires auth we
+  # do not have. Override empty so MIRRORS stays at oe-core defaults.
+  clo-mirrors: ""
