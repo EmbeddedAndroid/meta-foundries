@@ -79,6 +79,28 @@ EOF
         chown -R $FIOUID:$FIOGID ${IMAGE_ROOTFS}/var/rootdirs/home/fio
         chmod 0755 ${IMAGE_ROOTFS}/var/rootdirs/home/fio
     fi
+
+    # The weston system user (pulled in by qcom-multimedia-image) has the
+    # same problem as fio: useradd creates /home/weston at build time, but
+    # /home -> var/rootdirs/home is empty on first boot, so weston.service
+    # dies with "200/CHDIR" (Could not chdir to /home/weston) and the
+    # compositor never starts. Apply the identical fix, but only when the
+    # weston user is actually present (console images have no weston).
+    if grep -q '^weston:' ${IMAGE_ROOTFS}/etc/passwd 2>/dev/null; then
+        echo 'd /var/rootdirs/home/weston 0755 weston weston -' \
+            >> ${IMAGE_ROOTFS}${nonarch_libdir}/tmpfiles.d/00fio-home.conf
+        sed -i -e 's,:/home/weston:,:/var/rootdirs/home/weston:,g' ${IMAGE_ROOTFS}/etc/passwd
+        if [ -f ${IMAGE_ROOTFS}/usr/lib/passwd ]; then
+            sed -i -e 's,:/home/weston:,:/var/rootdirs/home/weston:,g' ${IMAGE_ROOTFS}/usr/lib/passwd
+        fi
+        WUID=$(awk -F: '/^weston:/{print $3}' ${IMAGE_ROOTFS}/etc/passwd 2>/dev/null)
+        WGID=$(awk -F: '/^weston:/{print $4}' ${IMAGE_ROOTFS}/etc/passwd 2>/dev/null)
+        if [ -n "$WUID" ] && [ -n "$WGID" ]; then
+            install -d ${IMAGE_ROOTFS}/var/rootdirs/home/weston
+            chown -R $WUID:$WGID ${IMAGE_ROOTFS}/var/rootdirs/home/weston
+            chmod 0755 ${IMAGE_ROOTFS}/var/rootdirs/home/weston
+        fi
+    fi
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "feature_fio_setup_homedir;"
