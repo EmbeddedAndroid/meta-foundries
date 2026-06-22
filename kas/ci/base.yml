@@ -21,3 +21,15 @@ local_conf_header:
   bb-parallel: |
     BB_NUMBER_THREADS = "8"
     PARALLEL_MAKE = "-j 8"
+
+  # OSTree stateroot name. LmP device tooling — sota.toml [pacman] os,
+  # lmp-device-register, aktualizr-lite's merge-deployment lookup — all
+  # assume the LmP convention "lmp". Our factory images build against
+  # qcom-distro-sota (not the lmp distro), so OSTREE_OSNAME would otherwise
+  # fall to meta-updater's default "nodistro"; the deployed stateroot then
+  # disagrees with the baked sota config and the FIRST OS-changing OTA fails
+  # with "No merge deployment", marking the target failing forever. Pin it
+  # at build time so the deploy stateroot, ostree boot entries, and sota
+  # pacman.os all derive from one value and match the rest of the fleet.
+  ostree-osname: |
+    OSTREE_OSNAME = "lmp"
